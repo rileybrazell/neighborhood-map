@@ -11,16 +11,21 @@ body {
 
     grid-template-columns: 1fr 3fr;
     grid-template-areas: "map-options map";
+
+    font-family: 'Crimson Text', serif;
 }
 
 #map-options {
     grid-area: "map-options";
-    background-color: red;
+
+    background-color: #d3c1b4;
+    border-radius: 0 3px 3px 0;
+
+    text-align: center;
 }
 
 #map {
     grid-area: "map";
-    background-color: blue;
 
     height: 100%;
 }
