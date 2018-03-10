@@ -1,4 +1,9 @@
 function initApp() {
+    var map;
+    let markers = [];
+
+    let infoWindow = new google.maps.InfoWindow();
+
     var view = {
         init: function() {
             var styles = [
@@ -349,8 +354,90 @@ function initApp() {
                 styles: styles,
                 mapTypeControl: false
             });
+        },
+
+        makeMarkerIcon: function(iconColor) {
+            var markerIcon = new google.maps.MarkerImage(
+                'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' +
+                iconColor + '|40|_|%E2%80%A2',
+                new google.maps.Size(21, 34),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(10, 34),
+                new google.maps.Size(21, 34)
+            );
+
+            return markerIcon;
+        }, 
+
+        openInfoWindow: function(marker, infoWindow) {
+            console.log('inside openInfoWindow');
+            if (infoWindow.marker != marker) {
+                infoWindow.setContent('');
+                infoWindow.marker = marker;
+
+                infoWindow.addListener('closeclick'), function() {
+                    infoWindow.setMap(null);
+                }
+
+                infoWindow.setContent('<div>' + marker.title + '</div>')
+            }
+            infoWindow.open(map, marker);
         }
     };
 
-    view.init();
+    var model = {
+        locations: [
+            {title: 'Kokyogaien National Park', coord: {lat: 35.6769716, lng: 139.7564905}},
+            {title: 'Imperial Palace', coord: {lat: 35.685175, lng: 139.7506108}},
+            {title: 'Meiji Jingu Gaien', coord: {lat: 35.6792501, lng: 139.7147095}},
+            {title: 'Shinjuku Gyoen National Garden', coord: {lat: 35.6851763, lng: 139.707863}},
+            {title: 'Meiji Jingū Inner Garden', coord: {lat: 35.6732786, lng: 139.6979008}},
+        ]
+    };
+
+    var viewModel = {
+        initMap: function() {
+            view.init();
+
+            this.createMarkers(model.locations);
+
+            this.showMarkers(markers);
+        },
+
+        createMarkers: function(locations) {
+            var defaultIcon = view.makeMarkerIcon('990000');
+
+            for (var i = 0; i < locations.length; i++) {
+                let title = locations[i].title;
+                let position = locations[i].coord;
+
+                let marker = new google.maps.Marker({
+                    title: title,
+                    position: position, 
+                    animation: google.maps.Animation.DROP,
+                    id: i,
+                    icon: defaultIcon
+                });
+                markers.push(marker);
+
+                marker.addListener('click', function() {
+                    view.openInfoWindow(this, infoWindow);
+                });
+            }
+        },
+
+        showMarkers: function(markers) {
+            var bounds = new google.maps.LatLngBounds();
+            // Assign all markers to current map and zoom out map to fit all markers
+            for(var i=0; i < markers.length; i++) {
+                markers[i].setMap(map);
+                bounds.extend(markers[i].position);
+            }
+            map.fitBounds(bounds);
+        },
+
+
+    }
+
+    viewModel.initMap();
 }
