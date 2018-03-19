@@ -25,13 +25,19 @@ li {
     text-align: left;
     font-size: 1.25em;
     padding-left: .5em;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
     border-top: 1px solid black;
 }
 
 li:hover {
     background-color: #baa89b;
+}
+
+#flickr-image {
+    margin: .5em;
+    margin-top: 1em;
+    border-top: 1px solid black;
 }
 
 #map-options {
