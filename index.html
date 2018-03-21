@@ -12,16 +12,16 @@
 </head>
 <body>
     <script src="js/lib/knockout-3.4.2.js"></script>
-    <div id="map-options">
+    <div id="map-options" data-bind="with: init">
         <h1>Calm Spots in Tokyo</h1>
-        <ul data-bind="foreach: locations">
-            <li data-bind="text: title"></li>
+        <ul data-bind="foreach: listLocations">
+            <li data-bind="text: $data.title, click: $root.openInfoWindow"></li>
         </ul>
         <p>Filter by name</p>
         <input type="text" name="filter">
     </div>
     <div id="map"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Q8XDgGOI6rQAl2kq8W1S8YGoy2vFbkQ&libraries=geometry&v=3"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Q8XDgGOI6rQAl2kq8W1S8YGoy2vFbkQ&libraries=geometry&v=3&callback=app"></script>
     <script src="js/map-styles.js"></script>
     <script src="js/main.js"></script>
 </body>
