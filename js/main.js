@@ -5,7 +5,8 @@ var app = function(){
             {title: 'Imperial Palace', pos: {lat: 35.685175, lng: 139.7506108}},
             {title: 'Meiji Jingu Gaien', pos: {lat: 35.6792501, lng: 139.7147095}},
             {title: 'Shinjuku Gyoen National Garden', pos: {lat: 35.6851763, lng: 139.707863}},
-            {title: 'Meiji Jingū Inner Garden', pos: {lat: 35.6732786, lng: 139.6979008}}
+            {title: 'Meiji Jingū Inner Garden', pos: {lat: 35.6732786, lng: 139.6979008}},
+            {title: 'Tokyo Toy Museum', pos: {lat: 35.689740, lng: 139.718043}}
         ]
     };
 
@@ -112,23 +113,40 @@ var app = function(){
     };
 
     // Functions related to list view of markers
-    var listView = {
-        init: function() {
-            var self = this;
+    var listView = function() {
+        var self = this;
 
-            self.markers = viewModel.markers;
-            self.listLocations = ko.observableArray([]);
+        self.markers = viewModel.markers;
+        self.listLocations = ko.computed(function() {
+            var locations = ko.observableArray([]);
 
             for (var i=0; i < self.markers.length; i++){
-                self.listLocations().push(self.markers[i]);
+                locations().push(self.markers[i]);
             }
-        },
-        
-        openInfoWindow: function(listItem) {
+
+            // sort markers by name
+            locations.sort(function(a, b) {
+                var titleA = a.title.toUpperCase(); // ignore upper and lowercase
+                var titleB = b.title.toUpperCase(); // ignore upper and lowercase
+                if (titleA < titleB) {
+                    return -1;
+                }
+                if (titleA > titleB) {
+                    return 1;
+                }
+                // titles must be equal
+                return 0;
+            });
+
+            return locations();
+        }, self);
+
+        self.openInfoWindow = function(listItem) {
             viewModel.openInfoWindow(listItem);
         }
     };
+
     viewModel.init();
 
-    ko.applyBindings(listView);
+    ko.applyBindings(new listView);
 };
