@@ -116,18 +116,20 @@ var app = function(){
     var listView = function() {
         var self = this;
 
+        self.locations = ko.observableArray([]);
+        self.listFilter = ko.observable('');
         self.markers = viewModel.markers;
+
+        for (var i=0; i < self.markers.length; i++){
+            self.locations().push(self.markers[i]);
+        }
+
+        // returns a filtered list of locations, if no filter returns the whole list
         self.listLocations = ko.computed(function() {
-            var locations = ko.observableArray([]);
-
-            for (var i=0; i < self.markers.length; i++){
-                locations().push(self.markers[i]);
-            }
-
-            // sort markers by name
-            locations.sort(function(a, b) {
-                var titleA = a.title.toUpperCase(); // ignore upper and lowercase
-                var titleB = b.title.toUpperCase(); // ignore upper and lowercase
+            // sort markers by name before filtering
+            self.locations.sort(function(a, b) {
+                var titleA = a.title.toLowerCase(); // ignore upper and lowercase
+                var titleB = b.title.toLowerCase(); // ignore upper and lowercase
                 if (titleA < titleB) {
                     return -1;
                 }
@@ -138,12 +140,34 @@ var app = function(){
                 return 0;
             });
 
-            return locations();
+            // this part adapted from here: http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+            let filter = self.listFilter().toLowerCase();
+            // if no filter, return all default locations
+            if (filter === '') {
+                return self.locations();
+            } else {
+                // only return an item that evaluates true to the stringStartsWith function
+                return ko.utils.arrayFilter(self.locations(), function(item){
+                    // lower case to match the filter
+                    return self.stringStartsWith(item.title.toLowerCase(), filter);
+                });
+            }
         }, self);
 
         self.openInfoWindow = function(listItem) {
             viewModel.openInfoWindow(listItem);
         }
+
+        // Implementation of knockout util function stringStartsWith
+        // found here: https://github.com/knockout/knockout/issues/401
+        self.stringStartsWith = function (string, startsWith) {          
+            string = string || "";
+            if (startsWith.length > string.length)
+                return false;
+            // will return true if the first character of the string matches 
+            // the supplied filter character
+            return string.substring(0, startsWith.length) === startsWith;
+        };
     };
 
     viewModel.init();
