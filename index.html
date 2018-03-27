@@ -15,7 +15,7 @@
     <div id="location-list">
         <h1>Calm Spots in Tokyo</h1>
         <ul data-bind="foreach: listLocations">
-            <li data-bind="text: $data.title, click: $root.openInfoWindow"></li>
+            <li data-bind="text: $data.title, click: $root.clickListItem"></li>
         </ul>
         <p>Filter by name</p>
         <input type="text" name="filter" data-bind="textInput: listFilter">

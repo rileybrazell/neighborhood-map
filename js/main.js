@@ -66,7 +66,7 @@ var app = function(){
         },
 
         openInfoWindow: function(marker) {
-            infoWindow = this.infoWindow;
+            let infoWindow = this.infoWindow;
 
             if (infoWindow.marker != marker) {
                 infoWindow.setContent('');
@@ -154,8 +154,18 @@ var app = function(){
             }
         }, self);
 
-        self.openInfoWindow = function(listItem) {
-            viewModel.openInfoWindow(listItem);
+        self.clickListItem = function(marker) {
+            for (var i=0; i < self.markers.length; i++){
+                self.markers[i].setAnimation(null);
+            }
+
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+              } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+              }
+
+            viewModel.openInfoWindow(marker);
         }
 
         // Implementation of knockout util function stringStartsWith
