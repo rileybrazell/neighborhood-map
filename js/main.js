@@ -109,6 +109,16 @@ var app = function(){
 
                 this.map.fitBounds(bounds);
             }
+        },
+
+        filterMarkers: function(filter, markers) {
+            // Check title strings and remove markers from map if they
+            // don't fit the filter
+            for (let i=0; i < markers.length; i++) {
+                if (!stringStartsWith(markers[i].title.toLowerCase(), filter)) {
+                    markers[i].setMap(null);
+                }
+            }
         }
     };
 
@@ -144,12 +154,14 @@ var app = function(){
             let filter = self.listFilter().toLowerCase();
             // if no filter, return all default locations
             if (filter === '') {
+                mapView.loadMarkers(self.markers);
                 return self.locations();
             } else {
+                mapView.filterMarkers(filter, self.markers);
                 // only return an item that evaluates true to the stringStartsWith function
                 return ko.utils.arrayFilter(self.locations(), function(item){
                     // lower case to match the filter
-                    return self.stringStartsWith(item.title.toLowerCase(), filter);
+                    return stringStartsWith(item.title.toLowerCase(), filter);
                 });
             }
         }, self);
@@ -167,17 +179,17 @@ var app = function(){
 
             viewModel.openInfoWindow(marker);
         }
+    };
 
-        // Implementation of knockout util function stringStartsWith
-        // found here: https://github.com/knockout/knockout/issues/401
-        self.stringStartsWith = function (string, startsWith) {          
-            string = string || "";
-            if (startsWith.length > string.length)
-                return false;
-            // will return true if the first character of the string matches 
-            // the supplied filter character
-            return string.substring(0, startsWith.length) === startsWith;
-        };
+    // Implementation of knockout util function stringStartsWith
+    // found here: https://github.com/knockout/knockout/issues/401
+    stringStartsWith = function (string, startsWith) {          
+        string = string || "";
+        if (startsWith.length > string.length)
+            return false;
+        // will return true if the first character of the string matches 
+        // the supplied filter character
+        return string.substring(0, startsWith.length) === startsWith;
     };
 
     viewModel.init();
