@@ -57,6 +57,7 @@ var app = function(){
             return markerIcon;
         },
 
+        // Open an infoWindow when a map marker is clicked
         applyBindings: function(markers, infoWindow) {
             for (let i=0; i < markers.length; i++) {
                 markers[i].addListener('click', function() {
@@ -68,23 +69,28 @@ var app = function(){
         openInfoWindow: function(marker) {
             let self = this;
             let infoWindow = self.infoWindow;
-            let photoURL = self.setPhotoURL(marker.title);
 
+            // If the marker does not have an infoWindow open already: 
             if (infoWindow.marker != marker) {
                 infoWindow.setContent('');
+                // Assigns this infoWindow to the clicked marker
                 infoWindow.marker = marker;
 
                 infoWindow.addListener('closeclick', function() {
                     infoWindow.setMap(null);
                 });
+
+                self.setWindowContent(marker.title);
             }
 
             infoWindow.open(mapView.map, marker);
         },
 
-        setPhotoURL: function(location) {
+        // XMLHttpRequest doc: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+        setWindowContent: function(location) {
             var self = this;
 
+            // Create request URL for flickr's search API, using location string
             var flickrURL = "https://api.flickr.com/services/rest/?" +
                 "method=flickr.photos.search" +
                 "&api_key=2ac46c267193aa7f20dc2902dde36b70" +
@@ -92,25 +98,37 @@ var app = function(){
                 "&format=json" +
                 "&nojsoncallback=1";
 
+            // XMLHttpRequest makes an ajax request expecting a returned json object 
             var request = new XMLHttpRequest();
             request.responseType = "json";
             request.open('GET', encodeURI(flickrURL), true);
 
+            // monitors the state of our async ajax request, readyState == 4 means DONE
+            // and the response is ready to operate on
             request.onreadystatechange = function() {
                 if (request.readyState == 4) {
+                    // Grabs the first response in the list of photos
+                    // This could be improved by looking for most popular,
+                    // or checking that these values are present and if not taking
+                    // the next response
                     var response = request.response.photos.photo[0];
+
+                    // creates the actual URL of a public photo on flickr
                     var photoURL = "https://farm" +
                         response.farm +
                         ".staticflickr.com/" +
                         response.server + "/" +
                         response.id + "_" +
                         response.secret + "_m.jpg";
-
-                    self.infoWindow.setContent('<div><img src=' + photoURL + '/></div><div>' + location + '</div>');
+                    
+                    // When the request is DONE, and the URL is complete, set them in 
+                    // the infoWindow
+                    self.infoWindow.setContent('<div><img src=' + photoURL + '/>' +
+                                                '</div><div>' + location + '</div>');
                 }
             };
 
-            request.send('json');
+            request.send();
         }
     };
 
