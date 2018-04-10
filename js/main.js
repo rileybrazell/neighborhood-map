@@ -128,6 +128,12 @@ var app = function(){
                 }
             };
 
+            // If flickr API returns an error, alert the user
+            request.onerror = function() {
+                alert('Unable to contact Flickr server, please try again later');
+                self.infoWindow.setContent('<div>' + location + '</div>');
+            }
+
             request.send();
         }
     };
