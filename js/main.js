@@ -2,7 +2,7 @@ var app = function(){
     var model = {
         locations: [
             {title: 'Kokyogaien National Park', pos: {lat: 35.6769716, lng: 139.7564905}},
-            {title: 'Imperial Palace', pos: {lat: 35.685175, lng: 139.7506108}},
+            {title: 'Tokyo Imperial Palace', pos: {lat: 35.685175, lng: 139.7506108}},
             {title: 'Meiji Jingu Gaien', pos: {lat: 35.6792501, lng: 139.7147095}},
             {title: 'Shinjuku Gyoen National Garden', pos: {lat: 35.6851763, lng: 139.707863}},
             {title: 'Meiji Jingū Inner Garden', pos: {lat: 35.6732786, lng: 139.6979008}},
@@ -15,11 +15,11 @@ var app = function(){
             self = this;
             mapView.init();
 
-            this.locations = model.locations;
-            this.infoWindow = new google.maps.InfoWindow();
-            this.markers = this.createMarkers(this.locations);
+            self.locations = model.locations;
+            self.infoWindow = new google.maps.InfoWindow();
+            self.markers = self.createMarkers(self.locations);
             
-            this.applyBindings(this.markers, this.infoWindow);
+            self.applyBindings(self.markers, self.infoWindow);
 
             mapView.loadMarkers(this.markers);
         },
@@ -66,6 +66,7 @@ var app = function(){
         },
 
         openInfoWindow: function(marker) {
+            let self = this;
             let infoWindow = this.infoWindow;
 
             if (infoWindow.marker != marker) {
@@ -80,6 +81,30 @@ var app = function(){
             }
 
             infoWindow.open(mapView.map, marker);
+            self.getPhotoURL(marker.title);
+        },
+
+        getPhotoURL: function(location) {
+            var self = this;
+
+            var url = "https://api.flickr.com/services/rest/?" +
+                "method=flickr.photos.search" +
+                "&api_key=2ac46c267193aa7f20dc2902dde36b70" +
+                "&text=" + location +
+                "&format=json" +
+                "&nojsoncallback=1";
+
+            var request = new XMLHttpRequest();
+            request.responseType = "json";
+            request.open('GET', encodeURI(url), true);
+
+            request.onreadystatechange = function() {
+                if (request.readyState == 4) {
+                    console.log(request.response);
+                }
+            };
+
+            request.send('json');
         }
     };
 
@@ -150,7 +175,9 @@ var app = function(){
                 return 0;
             });
 
-            // this part adapted from here: http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+            // Following section will filter visible markers and list items
+            // based on filter text box input. Code adapted from here: 
+            // http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
             let filter = self.listFilter().toLowerCase();
             // if no filter, return all default locations
             if (filter === '') {
