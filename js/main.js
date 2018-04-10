@@ -67,7 +67,8 @@ var app = function(){
 
         openInfoWindow: function(marker) {
             let self = this;
-            let infoWindow = this.infoWindow;
+            let infoWindow = self.infoWindow;
+            let photoURL = self.setPhotoURL(marker.title);
 
             if (infoWindow.marker != marker) {
                 infoWindow.setContent('');
@@ -76,18 +77,15 @@ var app = function(){
                 infoWindow.addListener('closeclick', function() {
                     infoWindow.setMap(null);
                 });
-
-                infoWindow.setContent('<div>' + marker.title + '</div>');
             }
 
             infoWindow.open(mapView.map, marker);
-            self.getPhotoURL(marker.title);
         },
 
-        getPhotoURL: function(location) {
+        setPhotoURL: function(location) {
             var self = this;
 
-            var url = "https://api.flickr.com/services/rest/?" +
+            var flickrURL = "https://api.flickr.com/services/rest/?" +
                 "method=flickr.photos.search" +
                 "&api_key=2ac46c267193aa7f20dc2902dde36b70" +
                 "&text=" + location +
@@ -96,11 +94,19 @@ var app = function(){
 
             var request = new XMLHttpRequest();
             request.responseType = "json";
-            request.open('GET', encodeURI(url), true);
+            request.open('GET', encodeURI(flickrURL), true);
 
             request.onreadystatechange = function() {
                 if (request.readyState == 4) {
-                    console.log(request.response);
+                    var response = request.response.photos.photo[0];
+                    var photoURL = "https://farm" +
+                        response.farm +
+                        ".staticflickr.com/" +
+                        response.server + "/" +
+                        response.id + "_" +
+                        response.secret + "_m.jpg";
+
+                    self.infoWindow.setContent('<div><img src=' + photoURL + '/></div><div>' + location + '</div>');
                 }
             };
 
@@ -200,9 +206,9 @@ var app = function(){
 
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
-              } else {
+            } else {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
-              }
+            }
 
             viewModel.openInfoWindow(marker);
         }
