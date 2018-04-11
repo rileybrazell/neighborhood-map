@@ -34,14 +34,9 @@ li:hover {
     background-color: #baa89b;
 }
 
-#flickr-image {
-    margin: .5em;
-    margin-top: 1em;
-    border-top: 1px solid black;
-}
-
 #location-list {
     grid-area: "location-list";
+    display: block;
 
     background-color: #d3c1b4;
     border-radius: 0 3px 3px 0;
@@ -53,4 +48,55 @@ li:hover {
     grid-area: "map";
 
     height: 100%;
+}
+
+#src {
+    text-align: center;
+    margin-top: 25px;
+}
+
+#collapse {
+    display: none;
+}
+
+#collapse:hover {
+    cursor: pointer;
+}
+
+#expand {
+    display: none;
+}
+
+#expand:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+        "map";
+    }
+
+    #location-list {
+        position: fixed;
+        z-index: 200;
+        width: 100%;
+        padding-bottom: 5px;
+    }
+
+    #collapse {
+        display: block;
+        position: absolute;
+        right: 10px;
+        bottom: 5px;
+    }
+
+    #expand {
+        display: block;
+        position: absolute;
+        z-index: 100;
+        top: 10px;
+        left: 10px;
+    }
 }

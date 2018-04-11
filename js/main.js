@@ -57,8 +57,8 @@ var app = function(){
             return markerIcon;
         },
 
-        // Open an infoWindow when a map marker is clicked
         applyBindings: function(markers, infoWindow) {
+            // Open an infoWindow when a map marker is clicked
             for (let i=0; i < markers.length; i++) {
                 markers[i].addListener('click', function() {
                     self.openInfoWindow(markers[i], infoWindow)
@@ -79,6 +79,8 @@ var app = function(){
                 infoWindow.addListener('closeclick', function() {
                     infoWindow.setMap(null);
                 });
+
+                infoWindow.setContent('<div>' + marker.title + '</div>');
 
                 self.setWindowContent(marker.title);
             }
@@ -210,7 +212,7 @@ var app = function(){
             // http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
             let filter = self.listFilter().toLowerCase();
             // if no filter, return all default locations
-            if (filter === '') {
+            if (filter == '') {
                 mapView.loadMarkers(self.markers);
                 return self.locations();
             } else {
@@ -235,12 +237,12 @@ var app = function(){
             }
 
             viewModel.openInfoWindow(marker);
-        }
+        };
     };
 
     // Implementation of knockout util function stringStartsWith
     // found here: https://github.com/knockout/knockout/issues/401
-    stringStartsWith = function (string, startsWith) {          
+    stringStartsWith = function (string, startsWith) {
         string = string || "";
         if (startsWith.length > string.length)
             return false;
@@ -253,3 +255,15 @@ var app = function(){
 
     ko.applyBindings(new listView);
 };
+
+hideShow = function() {
+    elem = document.getElementById('location-list');
+
+    if (elem.classList.contains('slideOutUp')) {
+        elem.classList.remove('slideOutUp');
+        elem.classList.add('slideInDown');
+    } else {
+        elem.classList.remove('slideInDown');
+        elem.classList.add('slideOutUp');
+    }
+}
