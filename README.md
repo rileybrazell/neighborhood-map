@@ -6,6 +6,8 @@ A simple map app that creates markers from a set of location data points. Google
 
 Visit [the live version of the app](https://rileybrazell.github.io/neighborhood-map)! Or, clone the whole repository and open `index.html` in your favorite browser
 
+-----
+
 ### What I learned
 
 This project was all about refinement of what I knew and expanding the edges of the knowledge. At times it felt like I was learning JavaScript all over again! I used Flickr's API services to pull down photos of the different locations. Google's Maps API did all of the map functions like markers and automatic resizing. Most importantly, KnockoutJS controls the list view of the locations, automatically building the list and connecting the entries to their corresponding marker locations. Working with KnockoutJS taught me a lot about how the structure of JS code affects your ability to interact with functions and data. Using a module pattern of writing JS code means all of the functions are abstracted away from the data, one only needs to change the location array object to add new markers, list items, and all logic behind them. This should make it easier to add new features later.
