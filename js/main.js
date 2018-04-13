@@ -1,8 +1,8 @@
 var app = function(){
     var model = {
         locations: [
-            {title: 'Kokyogaien National Park', pos: {lat: 35.6769716, lng: 139.7564905}},
-            {title: 'Tokyo Imperial Palace', pos: {lat: 35.685175, lng: 139.7506108}},
+            {title: 'Shinjuku Chuo Park', pos: {lat: 35.689022, lng: 139.689740}},
+            {title: 'Akasaka Imperial Property', pos: {lat: 35.677619, lng: 139.728660}},
             {title: 'Meiji Jingu Gaien', pos: {lat: 35.6792501, lng: 139.7147095}},
             {title: 'Shinjuku Gyoen National Garden', pos: {lat: 35.6851763, lng: 139.707863}},
             {title: 'Meiji Jingū Inner Garden', pos: {lat: 35.6732786, lng: 139.6979008}},
@@ -260,6 +260,10 @@ var app = function(){
 
     ko.applyBindings(new listView);
 };
+
+gMapsError = function() {
+    alert('Unable to contact Google Maps service, please try again later');
+}
 
 hideShow = function() {
     elem = document.getElementById('location-list');
