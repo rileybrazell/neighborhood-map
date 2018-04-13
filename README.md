@@ -15,3 +15,16 @@ This project was all about refinement of what I knew and expanding the edges of 
 ### How this app could be improved
 
 I could definitely could make some changes to code structure. It feels like I'm repeating myself in some places, and have a loop within a loop with functions all over that works fine but isn't pretty, and probably isn't optimal. As for features, I think it would fairly straight-forward to enable to user to add their own points; the map will automatically update it's center based on where the points are. The location points require a lat/lng pair and title, with some work these could be guessed and automated from a title entered by the user.
+
+-----
+
+#### This app uses:
+- [KnockoutJS](https://knockoutjs.com)
+- [Animate.css](https://daneden.github.io/animate.css/)
+- [Normalize.css](https://necolas.github.io/normalize.css/)
+- Google Maps API
+- Flickr Services API
+
+#### Big thanks to:
+- Udacity forums
+- [KnockoutJS maintainers](https://github.com/knockout/knockout/issues/401)
