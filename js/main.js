@@ -25,8 +25,8 @@ var app = function(){
         },
 
         createMarkers: function(locations) {
-            let self = this;
             let markers = [];
+            let self = this;
 
             locations.forEach(function(location, index) {
                 let title = location.title;
@@ -60,6 +60,9 @@ var app = function(){
 
         applyBindings: function(markers, infoWindow) {
             // Create click function for markers, bind to each marker
+            // This one I'm not too sure about, it works fine but I don't
+            // like that I have two forEach loops and making a bunch
+            // of functions.
             markers.forEach(function(marker) {
                 marker.addListener('click', function() {
                     self.markers.forEach(function(marker) {
@@ -146,7 +149,7 @@ var app = function(){
             request.onerror = function() {
                 alert('Unable to contact Flickr server, please try again later');
                 self.infoWindow.setContent('<div>' + location + '</div>');
-            }
+            };
 
             request.send();
         }
@@ -224,7 +227,7 @@ var app = function(){
             // http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
             let filter = self.listFilter().toLowerCase();
             // if no filter, return all default locations
-            if (filter == '') {
+            if (filter === '') {
                 mapView.loadMarkers(self.markers);
                 return self.locations();
             } else {
@@ -277,7 +280,7 @@ var app = function(){
 
     viewModel.init();
 
-    ko.applyBindings(new listView);
+    ko.applyBindings(new listView());
 };
 
 gMapsError = function() {

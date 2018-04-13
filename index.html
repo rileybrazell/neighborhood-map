@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <title>Neighborhood Map</title>
     <meta charset="utf-8">
@@ -22,9 +22,9 @@
         <input type="text" name="filter" data-bind="textInput: listFilter">
         <br>
         <div id="src"><a href="https://github.com/rileybrazell/neighborhood-map">Source on Github</a></div>
-        <img id="collapse" data-bind="click: function() {isHidden(true)}" src="img/if_menu-alt_134216.svg">
+        <img id="collapse" alt="collapse location list" data-bind="click: function() {isHidden(true)}" src="img/if_menu-alt_134216.svg">
     </div>
-    <div id="expand"><img data-bind="click: function() {isHidden(false)}" src="img/if_menu-alt_134216.svg"></div>
+    <div id="expand"><img alt="expand location list" data-bind="click: function() {isHidden(false)}" src="img/if_menu-alt_134216.svg"></div>
     <div id="map"></div>
     <script src="js/map-styles.js"></script>
     <script src="js/main.js"></script>
