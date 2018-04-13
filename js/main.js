@@ -25,22 +25,23 @@ var app = function(){
         },
 
         createMarkers: function(locations) {
+            let self = this;
             let markers = [];
 
-            for (var i=0; i < this.locations.length; i++){
-                let title = locations[i].title;
-                let position = locations[i].pos;
+            locations.forEach(function(location, index) {
+                let title = location.title;
+                let position = location.pos;
 
                 let marker = new google.maps.Marker({
                     title: title,
                     position: position,
                     animation: google.maps.Animation.DROP,
-                    id: i,
-                    icon: this.createMarkerIcon('990000')
+                    id: index,
+                    icon: self.createMarkerIcon('990000')
                 });
 
                 markers.push(marker);
-            };
+            });
 
             return markers;
         },
@@ -59,11 +60,12 @@ var app = function(){
 
         applyBindings: function(markers, infoWindow) {
             // Open an infoWindow when a map marker is clicked
-            for (let i=0; i < markers.length; i++) {
-                markers[i].addListener('click', function() {
-                    self.openInfoWindow(markers[i], infoWindow)
+
+            markers.forEach(function(marker) {
+                marker.addListener('click', function() {
+                    self.openInfoWindow(marker, infoWindow);
                 });
-            }
+            });
         },
 
         openInfoWindow: function(marker) {
@@ -157,25 +159,27 @@ var app = function(){
         },
 
         loadMarkers: function(markers) {
+            let self = this;
             let bounds = new google.maps.LatLngBounds();
 
-            for (let i=0; i < markers.length; i++) {
-                let LatLng = markers[i].position;
-                markers[i].setMap(this.map);
+            markers.forEach(function(marker) {
+                let LatLng = marker.position;
+                marker.setMap(self.map);
                 bounds.extend(LatLng);
 
-                this.map.fitBounds(bounds);
-            }
+                self.map.fitBounds(bounds);
+            });
         },
 
         filterMarkers: function(filter, markers) {
             // Check title strings and remove markers from map if they
             // don't fit the filter
-            for (let i=0; i < markers.length; i++) {
-                if (!stringStartsWith(markers[i].title.toLowerCase(), filter)) {
-                    markers[i].setMap(null);
+
+            markers.forEach(function(marker) {
+                if (!stringStartsWith(marker.title.toLowerCase(), filter)) {
+                    marker.setMap(null);
                 }
-            }
+            });
         }
     };
 
@@ -187,9 +191,9 @@ var app = function(){
         self.listFilter = ko.observable('');
         self.markers = viewModel.markers;
 
-        for (var i=0; i < self.markers.length; i++){
-            self.locations().push(self.markers[i]);
-        }
+        self.markers.forEach(function(marker) {
+            self.locations().push(marker);
+        });
 
         // returns a filtered list of locations, if no filter returns the whole list
         self.listLocations = ko.computed(function() {
@@ -226,9 +230,10 @@ var app = function(){
         }, self);
 
         self.clickListItem = function(marker) {
-            for (var i=0; i < self.markers.length; i++){
-                self.markers[i].setAnimation(null);
-            }
+
+            self.markers.forEach(function(marker) {
+                marker.setAnimation(null);
+            });
 
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
