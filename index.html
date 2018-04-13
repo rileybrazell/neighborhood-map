@@ -13,7 +13,7 @@
 <body>
     <script src="js/lib/knockout-3.4.2.js"></script>
 
-    <div id="location-list" class="animated">
+    <div id="location-list" class="animated" data-bind="css: hiddenStatus">
         <h1>Calm Spots in Tokyo</h1>
         <ul data-bind="foreach: listLocations">
             <li data-bind="text: $data.title, click: $root.clickListItem"></li>
@@ -22,9 +22,9 @@
         <input type="text" name="filter" data-bind="textInput: listFilter">
         <br>
         <div id="src"><a href="https://github.com/rileybrazell/neighborhood-map">Source on Github</a></div>
-        <img id="collapse" onclick="hideShow()" src="img/if_menu-alt_134216.svg">
+        <img id="collapse" data-bind="click: function() {isHidden(true)}" src="img/if_menu-alt_134216.svg">
     </div>
-    <div id="expand"><img onclick="hideShow()" src="img/if_menu-alt_134216.svg"></div>
+    <div id="expand"><img data-bind="click: function() {isHidden(false)}" src="img/if_menu-alt_134216.svg"></div>
     <div id="map"></div>
     <script src="js/map-styles.js"></script>
     <script src="js/main.js"></script>

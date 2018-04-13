@@ -59,10 +59,19 @@ var app = function(){
         },
 
         applyBindings: function(markers, infoWindow) {
-            // Open an infoWindow when a map marker is clicked
-
+            // Create click function for markers, bind to each marker
             markers.forEach(function(marker) {
                 marker.addListener('click', function() {
+                    self.markers.forEach(function(marker) {
+                        marker.setAnimation(null);
+                    });
+
+                    if (marker.getAnimation() !== null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+
                     self.openInfoWindow(marker, infoWindow);
                 });
             });
@@ -80,6 +89,7 @@ var app = function(){
 
                 infoWindow.addListener('closeclick', function() {
                     infoWindow.setMap(null);
+                    marker.setAnimation(null);
                 });
 
                 infoWindow.setContent('<div>' + marker.title + '</div>');
@@ -163,9 +173,8 @@ var app = function(){
             let bounds = new google.maps.LatLngBounds();
 
             markers.forEach(function(marker) {
-                let LatLng = marker.position;
                 marker.setMap(self.map);
-                bounds.extend(LatLng);
+                bounds.extend(marker.position);
 
                 self.map.fitBounds(bounds);
             });
@@ -174,7 +183,6 @@ var app = function(){
         filterMarkers: function(filter, markers) {
             // Check title strings and remove markers from map if they
             // don't fit the filter
-
             markers.forEach(function(marker) {
                 if (!stringStartsWith(marker.title.toLowerCase(), filter)) {
                     marker.setMap(null);
@@ -229,20 +237,31 @@ var app = function(){
             }
         }, self);
 
+        // Trigger a click event on the chosen marker (see viewModel.applyBindings)
         self.clickListItem = function(marker) {
-
-            self.markers.forEach(function(marker) {
-                marker.setAnimation(null);
-            });
-
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
+            if (document.documentElement.clientWidth < 650) {
+                self.isHidden(true);
             }
 
-            viewModel.openInfoWindow(marker);
+            new google.maps.event.trigger(marker, 'click');
         };
+
+        self.isHidden = ko.observable();
+
+        // If the window is resized while in mobile styling, hide/show the list, depending
+        // on size of window
+        window.onresize = function() {
+            if (document.documentElement.clientWidth >= 650) {
+                self.isHidden(false);
+            } else {
+                self.isHidden(true);
+            }
+        };
+
+        // Returns an animate.css class depending on the value of isHidden()
+        self.hiddenStatus = ko.pureComputed(function() {
+            return self.isHidden() ? "slideOutUp" : "slideInDown";
+        }, self);
     };
 
     // Implementation of knockout util function stringStartsWith
@@ -263,16 +282,4 @@ var app = function(){
 
 gMapsError = function() {
     alert('Unable to contact Google Maps service, please try again later');
-}
-
-hideShow = function() {
-    elem = document.getElementById('location-list');
-
-    if (elem.classList.contains('slideOutUp')) {
-        elem.classList.remove('slideOutUp');
-        elem.classList.add('slideInDown');
-    } else {
-        elem.classList.remove('slideInDown');
-        elem.classList.add('slideOutUp');
-    }
-}
+};
