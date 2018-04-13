@@ -4,7 +4,7 @@ A simple map app that creates markers from a set of location data points. Google
 
 # How to run app
 
-Visit [the live version of the app!](https://rileybrazell.github.io/neighborhood-map) Or, clone the whole repository and open `index.html` in your favorite browser
+Visit [the live version of the app](https://rileybrazell.github.io/neighborhood-map)! Or, clone the whole repository and open `index.html` in your favorite browser
 
 ### What I learned
 
